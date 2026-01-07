@@ -3,6 +3,9 @@ const {StatusCodes} = require("http-status-codes");
 const Artist = require("../models/Artist");
 const Album = require("../models/Albums");
 const uploadToCloudinary = require("../utils/cloudinaryUpdate");
+const Song = require("../models/Song");
+const User = require("../models/User");
+
 
 //! desc Create a new Album
 // method POST
@@ -108,14 +111,62 @@ const getAlbum = asyncHandler(async(req, res) => {
 // method PUT
 // PRIVATE - ADMIN
 const updateAlbum = asyncHandler(async(req, res) => {
-    console.log("update album")
-})
+    const {title, releaseDate, genre, description} = req.body;
+    //find the album
+    const album = await Album.findById(req.params.id);
+    if(!album){
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Album not exist");
+        
+    }
 
+    //upload the image if the user provider
+    let imageUrl = "";
+    if(req.file){
+        const result = await uploadToCloudinary(req.file.path, "spotify/album");
+        imageUrl = result.secure_url;
+    }
+
+    //update album
+    album.title = title || album.title;
+    album.releaseDate = releaseDate || album.releaseDate;
+    album.description = description || album.description;
+    album.genre = genre || album.genre;
+    album.coverImage = imageUrl || album.coverImage;
+
+    await album.save();
+    res.status(StatusCodes.OK).json(album);
+})
 //! desc DELETE ALBUM
 // method DELETE
 // PRIVATE - ADMIN
 const deleteAlbum = asyncHandler(async(req, res) => {
-    console.log("delete album")
+    const album = await Album.findById(req.params.id);
+    if(!album){
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Album not found");
+        
+    }
+    //delete album from song
+   await Song.updateMany(
+    {album: album._id},
+    {$unset: {album: 1}}
+   )
+    //delete album from user
+    await User.updateMany(
+        {likedAlbum: album._id},
+        {$pull: {likedAlbum: album._id}}
+    )
+    //delete album from artist
+     await Artist.updateOne(
+        {_id: album.artist},
+        {$pull: {albums: album._id}}
+    )
+    //delete album
+    await album.deleteOne();
+    res.status(StatusCodes.OK).json({
+        message: "Album deleted successfully"
+    })
 })
 
 module.exports = {
