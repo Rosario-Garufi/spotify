@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const playlistSchema = new mongoose.Schema.Types({
+const playlistSchema = new mongoose.Schema({
     name: {
         type: String,
         require: [true, "Playlist name is required"],

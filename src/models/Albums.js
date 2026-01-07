@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const albumSchema = new mongoose.Schema.Types({
+const albumSchema = new mongoose.Schema({
     title: {
         type: String,
         require: [true, "Title album is required"],

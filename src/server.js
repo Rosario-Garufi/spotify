@@ -2,6 +2,7 @@ const express = require("express");
 const connectDB = require("./config/db");
 const userRouter = require("./routes/userRoute");
 const { StatusCodes } = require("http-status-codes");
+const artistRouter = require("./routes/artistRoute");
 
 require("dotenv").config()
 
@@ -13,6 +14,10 @@ app.use(express.json())
 
 //***** USER ROUTE *****/
 app.use("/api/v1/users", userRouter)
+
+
+//***** ARTIST ROUTE *****/
+app.use("/api/v1/artists", artistRouter)
 
 //error handle
 app.use((req, res, next) => {

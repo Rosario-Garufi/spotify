@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const artistSchema = new mongoose.Schema.Types({
+const artistSchema = new mongoose.Schema({
     name: {
         type: String,
         require: [true, "Name is required"],
@@ -44,7 +44,7 @@ const artistSchema = new mongoose.Schema.Types({
 },
 
 {
-    timeStamps: true
+    timestamps : true
 }
 )
 
