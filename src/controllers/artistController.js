@@ -72,8 +72,8 @@ const getAllArtists = asyncHandler(async(req, res) => {
 })
 
 //!desc GET TOP ARTISTS
-//method POST
-//route /api/v1/artists
+//method GET
+//route /api/v1/artists/:id/top-song
 
 const getTopArtist = asyncHandler(async(req, res) => {
     const {limit = 5} = req.query;
@@ -97,9 +97,26 @@ const getArtistTopSong = asyncHandler(async(req, res) => {
         
     }
 })
+
+//!desc GET ARTIST
+//method GET
+//route /api/v1/artists/:id
+
+const getArtist = asyncHandler(async(req, res) => {
+    //find the artist
+    const artist = await Artist.findById(req.params.id);
+    if(artist){
+        res.status(StatusCodes.OK).json(artist)
+    }else{
+        res.status(StatusCodes.NOT_FOUND)
+        throw new Error("Artist not exist");
+        
+    }
+})
 module.exports = {
     createArtist,
     getAllArtists,
     getTopArtist,
-    getArtistTopSong
+    getArtistTopSong,
+    getArtist
 }
