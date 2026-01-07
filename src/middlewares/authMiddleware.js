@@ -23,6 +23,17 @@ const protectRoute = asyncHandler(async(req, res, next) => {
     }
 })
 
+const isAdmin = asyncHandler(async(req, res, next) => {
+    
+    if(req.user && req.user.isAdmin){
+        next()
+    }else{
+        res.status(StatusCodes.FORBIDDEN)
+        throw new Error("You not have the permission to do that")
+    }
+})
+
 module.exports = {
-    protectRoute
+    protectRoute,
+    isAdmin
 }
