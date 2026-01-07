@@ -3,12 +3,12 @@ const mongoose = require("mongoose");
 const albumSchema = new mongoose.Schema({
     title: {
         type: String,
-        require: [true, "Title album is required"],
+        required: [true, "Title album is required"],
         trim: true
     },
     artist: {
         type: mongoose.Schema.Types.ObjectId,
-        require: [true, "Artist is required!"],
+        required: [true, "Artist is required!"],
         ref: "Artist"
     },
     releaseDate: {
@@ -33,7 +33,7 @@ const albumSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        require: [true, "Description is required"]
+        required: [true, "Description is required"]
     },
     isExplicit: {
         type: Boolean,

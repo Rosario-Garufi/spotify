@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const songSchema = new mongoose.Schema({
     title: {
         type: String,
-        require: [true, "Song name is required!"],
+        required: [true, "Song name is required!"],
         trim: true
     },
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Artist",
-        require: [true, "Artist id is Required"]
+        required: [true, "Artist id is Required"]
     },
     duration: {
         type: Number,
@@ -17,7 +17,7 @@ const songSchema = new mongoose.Schema({
     },
     audioUrl : {
         type: String,
-        require: [true, "Audio is required"]
+        required: [true, "Audio is required"]
     },
     coverImage: {
         type: String,

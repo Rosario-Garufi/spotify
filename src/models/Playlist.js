@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const playlistSchema = new mongoose.Schema({
     name: {
         type: String,
-        require: [true, "Playlist name is required"],
+        required: [true, "Playlist name is required"],
         trim: true
     },
     description: {
@@ -13,7 +13,7 @@ const playlistSchema = new mongoose.Schema({
     creaor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        require: [true, "The user is required"]
+        required: [true, "The user is required"]
     },
     songs: [
         {
@@ -39,7 +39,7 @@ const playlistSchema = new mongoose.Schema({
     }],
 
 }, {
-    timeStamps: true
+    timestamps: true
 })
 
 const playlist = mongoose.model("Playlist", playlistSchema);

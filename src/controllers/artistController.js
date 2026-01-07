@@ -3,6 +3,8 @@ const {StatusCodes} = require("http-status-codes");
 const Artist = require("../models/Artist");
 const uploadToCloudinary = require("../utils/cloudinaryUpdate");
 const Song = require("../models/Song");
+const Album = require("../models/Albums");
+const User = require("../models/User");
 
 //!desc create a new Artist
 //method POST
@@ -113,10 +115,69 @@ const getArtist = asyncHandler(async(req, res) => {
         
     }
 })
+//!desc UPDATE ARTIST
+//method PUT
+//route /api/v1/artists/:id
+const updateArtist = asyncHandler(async(req, res) => {
+    const {name, bio, genre} = req.body;
+    if(!name || !bio || !genre){
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("name, bio and genre is required");
+        
+    }
+    //find the artist
+    const artist = await Artist.findById(req.params.id);
+    if(!artist){
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Artist not found");
+        
+    }
+ let imageUrl = ""
+    if(req.file){
+        const result = await uploadToCloudinary(req.file.path, "spotify/artist");
+        imageUrl = result.secure_url
+    }
+    artist.name = name || artist.name;
+    artist.bio = bio || artist.bio;
+    artist.genres = genre || artist.genres;
+    artist.image = imageUrl || artist.image
+   
+
+    await artist.save()
+    res.status(StatusCodes.OK).json(artist)
+})
+
+//!desc DELETE ARTIST
+//method DELETE 
+//route /api/v1/artists/:id
+
+const deleteArtist = asyncHandler(async(req, res) => {
+    //find the artist
+    const artist = await Artist.findById(req.params.id);
+    if(!artist){
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Artist not found");
+        
+    }
+
+    //delete the artist on song model
+    await Song.deleteMany({artist: artist._id})
+    //delete the artist on album model
+    await Album.deleteMany({artist: artist._id})
+    //delete the artist of user model
+    await User.deleteMany({followedArtist: artist._id})
+    //delete the artist if this exist
+    await artist.deleteOne();
+    res.status(StatusCodes.OK).json({
+        message: "Artist eliminated"
+    })
+})
 module.exports = {
     createArtist,
     getAllArtists,
     getTopArtist,
     getArtistTopSong,
-    getArtist
+    getArtist,
+    updateArtist,
+    deleteArtist
 }
