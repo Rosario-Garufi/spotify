@@ -2,6 +2,7 @@ const User = require("../models/User");
 const asyncHandler = require("express-async-handler")
 const {StatusCodes} = require("http-status-codes");
 const generateToken = require("../utils/generateToken");
+const uploadToCloudinary = require("../utils/cloudinaryUpdate");
 
 
 //!desc - createUser
@@ -85,9 +86,42 @@ const getUserProfile = asyncHandler(async(req, res) => {
     }
 })
 
+const updateUserProfile = asyncHandler(async(req, res) => {
+        const {name, email, password} = req.body;
+        const user = await User.findById(req.user._id);
+        if(user){
+            user.name = name || user.name;
+            user.email = email || user.email;
+
+            if(password){
+                user.password = password;
+            }
+
+            //upload profilePicture if the user providr
+            if(req.file){
+                const result = await uploadToCloudinary(req.file.path, "spotify/users");
+                user.profilePicture = result.secure_url || user.profilePicture
+            }
+
+            const updateUser = await user.save();
+            res.status(StatusCodes.OK).json({
+                _id : updateUser._id,
+                name: updateUser.name,
+                email: updateUser.email,
+                isAdmin: updateUser.isAdmin,
+                profilePicture: updateUser.profilePicture
+            })
+        }else{
+            res.status(StatusCodes.NOT_FOUND)
+            throw new Error("User not found");
+            
+        }
+
+})
 
 module.exports = {
     registerUser,
     loginUser,
-    getUserProfile
+    getUserProfile,
+    updateUserProfile
 }
