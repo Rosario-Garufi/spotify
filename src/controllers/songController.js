@@ -78,7 +78,7 @@ const createSong = asyncHandler(async(req, res) => {
         coverImage: imageResult.secure_url,
         releaseDate: releaseDate ? new Date(releaseDate) : Date.now(),
         genre,
-        lyrics,
+        lyrics : lyrics ? lyrics : null,
         isExplicit,
         featuredArtist: featuredArtist ? JSON.parse(featuredArtist) : []
 
