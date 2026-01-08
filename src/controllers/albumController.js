@@ -42,6 +42,7 @@ const createAlbum = asyncHandler(async(req, res) => {
 
         const result = await uploadToCloudinary(req.file.path, "spotify/album");
         imageUrl = result.secure_url;
+        req.file.path = null
     }
     const newAlbum = await Album.create({
         title,
