@@ -96,7 +96,47 @@ const createSong = asyncHandler(async(req, res) => {
     res.status(StatusCodes.CREATED).json(newSong)
     
 })
+//!DESC - GET SONG
+// METHODS GET
+//PUBLIC
 
+const getAllSongs = asyncHandler(async(req, res) => {
+    const {title, genre, search, page = 1, limit = 10} = req.query;
+
+    const filter = {};
+
+    if(title) filter.title = {$in: [title]};
+
+    if(genre) filter.genre = {$in: [genre]};
+
+    if(search){
+        filter.$or[
+            {artist: {$regex: search, options: "i"}}
+        ]
+    }
+
+    const count = await Song.countDocuments(filter);
+
+    const skip = (parseInt(page) - 1) * parseInt(limit)
+
+    const songs = await Song.find(filter).sort({plays: -1}).skip(parseInt(skip)).limit(parseInt(limit))
+
+    res.status(StatusCodes.OK).json({
+        songs,
+        page:parseInt(page),
+        pages: Math.ceil(count / parseInt(limit)),
+        totalSong: count
+    })
+})
+
+//!DESC - GET A SONG
+// METHODS GET
+//PUBLIC
+const getSong = asyncHandler(async(req, res) => {
+    console.log("Get a song")
+})
 module.exports = {
-    createSong
+    createSong,
+    getAllSongs,
+    getSong
 }

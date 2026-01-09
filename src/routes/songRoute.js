@@ -1,6 +1,6 @@
 const express = require("express");
 const { protectRoute, isAdmin } = require("../middlewares/authMiddleware");
-const { createSong } = require("../controllers/songController");
+const { createSong, getAllSongs, getSong } = require("../controllers/songController");
 const upload = require("../middlewares/upload");
 
 const songRoute = express.Router();
@@ -15,6 +15,9 @@ const songUpload = upload.fields([
 songRoute.post("/", protectRoute, isAdmin,  songUpload, createSong)
 
 //public
+songRoute.get("/", getAllSongs)
+songRoute.get("/:id", getSong)
+
 
 
 module.exports = songRoute
