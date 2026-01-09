@@ -4,6 +4,7 @@ const Artist = require("../models/Artist");
 const Album = require("../models/Albums");
 const uploadToCloudinary = require("../utils/cloudinaryUpdate");
 const Song = require("../models/Song");
+const Playlist = require("../models/Playlist");
 
 
 //!DESC - CREATESONG
@@ -133,10 +134,154 @@ const getAllSongs = asyncHandler(async(req, res) => {
 // METHODS GET
 //PUBLIC
 const getSong = asyncHandler(async(req, res) => {
-    console.log("Get a song")
+    //find the song
+    const song = await Song.findById(req.params.id);
+    if(!song){
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Song not found!");
+        
+    }
+    song.plays += 1;
+    await song.save();
+
+    res.status(StatusCodes.OK).json(song)
 })
+
+//!DESC - UPDATE A SONG
+// METHODS PUT
+//PRIVATE
+
+const updateSong = asyncHandler(async(req, res) => {
+    const {title,  albumId, duration, releaseDate, genre, lyrics, isExplicit, featuredArtist} = req.body
+    
+    //find the song
+    const song = await Song.findById(req.params.id);
+    if(!song){
+              res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Song not found!");
+    }
+
+    //if the user provide an audio
+    if(req.files && req.files?.audio){
+        const audioResult = await uploadToCloudinary(req.files.audio[0].path, "spotify/songs");
+        song.audioUrl = audioResult.secure_url
+    }
+
+    if(req.files && req.files.cover){
+        const imageResult = await uploadToCloudinary(req.files.cover[0].path, "spotify/songs");
+        song.coverImage = imageResult.secure_url
+    }
+
+    let album = null;
+    if(albumId){
+        album = await Album.findById(albumId);
+        if(!album){
+            res.status(StatusCodes.NOT_FOUND);
+            throw new Error("Album not exist");
+            
+        }
+    }
+
+    if(albumId && albumId.toString() !== song.album?.toString()){
+        if(song.album){
+            await Album.findByIdAndUpdate(
+                song.album,
+                {$pull: {songs: song._id}}
+            )
+        }
+
+        //add to new album
+    
+         await Album.findByIdAndUpdate(
+        albumId,
+        {$addToSet: {songs: song._id}}
+    )
+    
+    }
+
+    
+   
+    song.title = title ?? song.title;
+    song.album = albumId ?? song.album;
+    song.duration = duration ?? song.duration;
+    song.releaseDate = releaseDate ?? song.releaseDate;
+    song.genre = genre ?? song.genre,
+    song.lyrics = lyrics ?? song.lyrics;
+    song.isExplicit = isExplicit ?? song.isExplicit;
+    song.featuredArtist = featuredArtist ? JSON.parse(featuredArtist) : song.featuredArtist;
+   
+
+    await song.save()
+    res.status(StatusCodes.OK).json(song)
+    
+})
+
+//!DESC - DELETE A SONG
+// METHODS DELETE
+//PRIVATE
+
+const deleteSong = asyncHandler(async(req, res) => {
+    
+    //find the song
+    const song = await Song.findById(req.params.id);
+    if(!song){
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Song not found");
+        
+    }
+
+   //versione più prestante
+   await Promise.all([
+     Artist.updateOne(
+    {_id: song.artist},
+    {$pull: {songs: song._id}}
+   ),
+   song.album ?  Album.updateOne(
+        {_id: song.album},
+        {$pull: {songs: song._id}}
+    ) : null,
+     Playlist.updateMany(
+    {songs: song._id},
+    {$pull: {songs: song._id}}
+   )
+   ])
+   //delete song
+   await Song.findByIdAndDelete(req.params.id)
+
+   res.status(StatusCodes.OK).json({
+    message: "Song deleted successfully"
+   })
+})
+
+//!DESC - GET TOP SONG
+// METHODS GET
+//PUBLIC
+const getTopSong = asyncHandler(async(req, res) => {
+    const {limit = 5} = req.query;
+
+    const songs = await Song.find().sort({plays: -1}).limit(parseInt(limit)).populate("artist",  "name image").populate("album", "title coverImage");
+
+    res.status(StatusCodes.OK).json(songs)
+})
+
+//!DESC - GET new releases
+// METHODS GET
+//PUBLIC
+
+const getNewReleases = asyncHandler(async(req, res) => {
+    const {limit} = req.query;
+
+    const song = await Song.find().sort({createdAt: -1}).limit(parseInt(limit)).populate("artist", "name image").populate("album", "title coverImage");
+
+    res.status(StatusCodes.OK).json(song)
+})
+
 module.exports = {
     createSong,
     getAllSongs,
-    getSong
+    getSong,
+    updateSong,
+    deleteSong,
+    getTopSong,
+    getNewReleases
 }
