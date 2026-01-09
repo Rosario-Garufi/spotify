@@ -5,6 +5,7 @@ const Album = require("../models/Albums");
 const uploadToCloudinary = require("../utils/cloudinaryUpdate");
 const Song = require("../models/Song");
 const Playlist = require("../models/Playlist");
+const axios = require("axios")
 
 
 //!DESC - CREATESONG
@@ -276,6 +277,33 @@ const getNewReleases = asyncHandler(async(req, res) => {
     res.status(StatusCodes.OK).json(song)
 })
 
+//!DESC - GET DOWNLOAD MUSIC
+// METHODS GET
+//PUBLIC
+
+const downloadSong = asyncHandler(async(req, res) => {
+    const song = await Song.findById(req.params.id);
+    if(!song){
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Song not exist");
+        
+    }
+
+    const response = await axios({
+        url: song.audioUrl,
+        method: "GET",
+        responseType: "stream"
+    })
+
+    res.setHeader(
+        "Content-Disposition",
+        `attachment; fileName="${song.title}.mp3"`
+    )
+     res.setHeader("Content-Type", "audio/mpeg");
+
+     response.data.pipe(res);
+})
+
 module.exports = {
     createSong,
     getAllSongs,
@@ -283,5 +311,6 @@ module.exports = {
     updateSong,
     deleteSong,
     getTopSong,
-    getNewReleases
+    getNewReleases,
+    downloadSong
 }

@@ -1,6 +1,6 @@
 const express = require("express");
 const { protectRoute, isAdmin } = require("../middlewares/authMiddleware");
-const { createSong, getAllSongs, getSong, updateSong, deleteSong, getTopSong, getNewReleases } = require("../controllers/songController");
+const { createSong, getAllSongs, getSong, updateSong, deleteSong, getTopSong, getNewReleases, downloadSong } = require("../controllers/songController");
 const upload = require("../middlewares/upload");
 
 const songRoute = express.Router();
@@ -23,6 +23,9 @@ songRoute.get("/", getAllSongs)
 songRoute.get("/top-song", getTopSong)
 songRoute.get("/new-releases", getNewReleases)
 songRoute.get("/:id", getSong)
+songRoute.get("/:id/download", downloadSong)
+
+
 
 
 

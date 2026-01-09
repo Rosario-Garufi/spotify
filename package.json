@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Rosario-Garufi/spotify#readme",
   "dependencies": {
+    "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.8.0",
     "dotenv": "^17.2.3",
