@@ -10,7 +10,7 @@ const playlistSchema = new mongoose.Schema({
         type: String,
         trim:true
     },
-    creaor: {
+    creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: [true, "The user is required"]

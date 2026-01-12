@@ -5,6 +5,7 @@ const { StatusCodes } = require("http-status-codes");
 const artistRouter = require("./routes/artistRoute");
 const albumRoute = require("./routes/albumRoute");
 const songRoute = require("./routes/songRoute");
+const playlistRoute = require("./routes/playlistRoute");
 
 require("dotenv").config()
 
@@ -26,6 +27,9 @@ app.use("/api/v1/albums", albumRoute)
 
 //***** SONG ROUTE *****/
 app.use("/api/v1/songs", songRoute)
+
+//***** PLAYLIST ROUTE *****/
+app.use("/api/v1/playlist", playlistRoute)
 
 //error handle
 app.use((req, res, next) => {
