@@ -6,7 +6,7 @@ const uploadToCloudinary = require("../utils/cloudinaryUpdate");
 const Song = require("../models/Song");
 const User = require("../models/User");
 
-//!DESC - CREATEPLAYLIST
+//DESC - CREATEPLAYLIST
 // METHODS POST
 //PRIVATE
 
@@ -46,7 +46,7 @@ const createPlaylist = asyncHandler(async(req, res) => {
     res.status(StatusCodes.CREATED).json(newPlaylist);
 })
 
-//!DESC - GET PUBLIC PLAYLIST
+//DESC - GET PUBLIC PLAYLIST
 //methods GET
 //PUBLIC
 
@@ -77,7 +77,7 @@ const getPublicPlaylist = asyncHandler(async(req, res) => {
 })
 
 
-//!desc GetUserPlaylist
+//desc GetUserPlaylist
 //methods GET
 //private
 
@@ -95,7 +95,7 @@ const getUserPlaylist = asyncHandler(async(req, res) => {
     res.status(StatusCodes.OK).json(playlists)
 })
 
-//!desc updatePlaylist
+//desc updatePlaylist
 //methods PUT
 //private
 
@@ -137,7 +137,7 @@ const updatePlaylist = asyncHandler(async(req, res) => {
         
 })
 
-//!desc delete Playlist
+//desc delete Playlist
 //methods DELETE
 //private - only creator
 const deletePlaylist = asyncHandler(async(req, res) => {
@@ -167,7 +167,7 @@ const deletePlaylist = asyncHandler(async(req, res) => {
     }
 })
 
-//!desc add song to the playlist
+//desc add song to the playlist
 //methods PUT
 //private 
 
@@ -208,7 +208,7 @@ const addSongToPlaylist = asyncHandler(async(req, res) => {
     await playlist.save()
 })
 
-//!desc remove song to the playlist
+//desc remove song to the playlist
 //methods PUT
 //private 
 
@@ -248,7 +248,7 @@ const removeSongFromPlaylist = asyncHandler(async(req, res) =>  {
     })
 })
 
-//!desc add collaborator to playlist
+//desc add collaborator to playlist
 //methods PUT
 //private 
 
@@ -288,7 +288,7 @@ const addCollaboratorToPlaylist = asyncHandler(async(req, res) => {
     res.status(StatusCodes.OK).json(playlist)
 })
 
-//!desc remove collaborator to playlist
+//desc remove collaborator to playlist
 //methods PUT
 //private 
 
@@ -327,7 +327,7 @@ const removeCollaboratorFromPlaylist = asyncHandler(async(req,res) => {
     })
 })
 
-//!desc get feautured playlist
+//desc get feautured playlist
 //methods GET
 //public
 const getFeaturedPlaylist = asyncHandler(async(req, res) => {

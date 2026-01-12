@@ -6,7 +6,7 @@ const Song = require("../models/Song");
 const Album = require("../models/Albums");
 const User = require("../models/User");
 
-//!desc create a new Artist
+//desc create a new Artist
 //method POST
 //route /api/v1/artists
 
@@ -42,7 +42,7 @@ const createArtist = asyncHandler(async(req, res) => {
     }
 })
 
-//!desc GET ALL ARTIST WITH PAGINATION
+//desc GET ALL ARTIST WITH PAGINATION
 //method POST
 //route /api/v1/artists
 
@@ -73,7 +73,7 @@ const getAllArtists = asyncHandler(async(req, res) => {
     
 })
 
-//!desc GET TOP ARTISTS
+//desc GET TOP ARTISTS
 //method GET
 //route /api/v1/artists/:id/top-song
 
@@ -100,7 +100,7 @@ const getArtistTopSong = asyncHandler(async(req, res) => {
     }
 })
 
-//!desc GET ARTIST
+//desc GET ARTIST
 //method GET
 //route /api/v1/artists/:id
 
@@ -115,7 +115,7 @@ const getArtist = asyncHandler(async(req, res) => {
         
     }
 })
-//!desc UPDATE ARTIST
+//desc UPDATE ARTIST
 //method PUT
 //route /api/v1/artists/:id
 const updateArtist = asyncHandler(async(req, res) => {
@@ -147,7 +147,7 @@ const updateArtist = asyncHandler(async(req, res) => {
     res.status(StatusCodes.OK).json(artist)
 })
 
-//!desc DELETE ARTIST
+//desc DELETE ARTIST
 //method DELETE 
 //route /api/v1/artists/:id
 

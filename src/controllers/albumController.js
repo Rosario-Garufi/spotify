@@ -7,7 +7,7 @@ const Song = require("../models/Song");
 const User = require("../models/User");
 
 
-//! desc Create a new Album
+// desc Create a new Album
 // method POST
 // private
 
@@ -60,7 +60,7 @@ const createAlbum = asyncHandler(async(req, res) => {
     res.status(StatusCodes.CREATED).json(newAlbum)
 })
 
-//! desc GET ALL ALBUMS
+// desc GET ALL ALBUMS
 // method GET
 // PUBLIC
 
@@ -90,7 +90,7 @@ const getAllAlbums = asyncHandler(async(req, res) => {
     })
 })
 
-//! desc GET ALBUM
+// desc GET ALBUM
 // method GET
 // PUBLIC
 
@@ -108,7 +108,7 @@ const getAlbum = asyncHandler(async(req, res) => {
     
 })
 
-//! desc UPDATE ALBUM
+// desc UPDATE ALBUM
 // method PUT
 // PRIVATE - ADMIN
 const updateAlbum = asyncHandler(async(req, res) => {
@@ -138,7 +138,7 @@ const updateAlbum = asyncHandler(async(req, res) => {
     await album.save();
     res.status(StatusCodes.OK).json(album);
 })
-//! desc DELETE ALBUM
+// desc DELETE ALBUM
 // method DELETE
 // PRIVATE - ADMIN
 const deleteAlbum = asyncHandler(async(req, res) => {

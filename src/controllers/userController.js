@@ -8,7 +8,7 @@ const Artist = require("../models/Artist");
 const Playlist = require("../models/Playlist");
 
 
-//!desc - createUser
+//desc - createUser
 //methos POST
 //route /api/v1/users
 
@@ -44,7 +44,7 @@ const registerUser = asyncHandler(async(req, res) => {
     }
 })
 
-//!desc - Login
+//desc - Login
 //methos POST
 //route /api/v1/users
 const loginUser = asyncHandler(async(req, res) => {
@@ -74,7 +74,7 @@ const loginUser = asyncHandler(async(req, res) => {
 
    
 })
-//!desc - get user
+//desc - get user
 //methos GET - private
 //route /api/v1/users
 const getUserProfile = asyncHandler(async(req, res) => {
@@ -122,7 +122,7 @@ const updateUserProfile = asyncHandler(async(req, res) => {
 
 })
 
-//!desc - liked song
+//desc - liked song
 //methos PUT - private
 //route /api/v1/users
 
@@ -151,7 +151,7 @@ const likedSong = asyncHandler(async(req,res) => {
     res.status(StatusCodes.OK).json(user)
 })
 
-//!desc - Follow Artist
+//desc - Follow Artist
 //methos PUT - private
 //route /api/v1/users
 
@@ -206,7 +206,7 @@ const followArtist = asyncHandler(async(req,res) => {
 })
 
 
-//!desc - Follow Playlist
+//desc - Follow Playlist
 //methos PUT - private
 //route /api/v1/users
 
